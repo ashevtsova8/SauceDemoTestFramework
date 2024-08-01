@@ -5,16 +5,27 @@ import org.testng.annotations.Test;
 
 public class LoginTests extends BaseTest implements ITestConstants {
     private static final String EMPTY_USERNAME_ERROR_TEXT = "Epic sadface: Username is required";
+    private static final String EMPTY_USERNAME_ERROR_TEXT_ERROR = "Epic sadface: Username is " +
+            "required";
     private static final String EMPTY_PASSWORD_ERROR_TEXT = "Epic sadface: Password is required";
     private static final String INCORRECT_DATA_ERROR_TEXT = "Epic sadface: Username and password do not match any user in this service";
 
-    @Test
+    @Test()
     public void loginWithEmptyFieldsTest() {
         loginPage
                 .openPage()
                 .waitForPageOpened()
                 .login("", "");
         Assert.assertEquals(loginPage.getErrorMessageText(), EMPTY_USERNAME_ERROR_TEXT);
+    }
+
+    @Test(retryAnalyzer = Retry.class)
+    public void loginWithEmptyFieldsTestWithError() {
+        loginPage
+                .openPage()
+                .waitForPageOpened()
+                .login("", "");
+        Assert.assertEquals(loginPage.getErrorMessageText(), EMPTY_USERNAME_ERROR_TEXT_ERROR);
     }
 
     @Test
@@ -44,7 +55,7 @@ public class LoginTests extends BaseTest implements ITestConstants {
         Assert.assertEquals(loginPage.getErrorMessageText(), INCORRECT_DATA_ERROR_TEXT);
     }
 
-    @Test
+    @Test()
     public void loginCorrectDataTest() {
         loginPage
                 .openPage()
