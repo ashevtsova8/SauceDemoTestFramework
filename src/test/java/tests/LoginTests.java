@@ -2,6 +2,8 @@ package tests;
 
 import listeners.Retry;
 import org.testng.Assert;
+import org.testng.annotations.Optional;
+import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 public class LoginTests extends BaseTest implements ITestConstants {
@@ -56,12 +58,32 @@ public class LoginTests extends BaseTest implements ITestConstants {
         Assert.assertEquals(loginPage.getErrorMessageText(), INCORRECT_DATA_ERROR_TEXT);
     }
 
+    @Test
+    @Parameters({"username", "password"})
+    public void loginWithIncorrectDataTestWithParameters(@Optional("optinalUsername") String username,
+            @Optional("optinalPassword") String password) {
+        loginPage
+                .openPage()
+                .waitForPageOpened()
+                .login(username, password);
+        Assert.assertEquals(loginPage.getErrorMessageText(), INCORRECT_DATA_ERROR_TEXT);
+    }
+
     @Test()
     public void loginCorrectDataTest() {
         loginPage
                 .openPage()
                 .waitForPageOpened()
                 .login(USERNAME, PASSWORD);
+        Assert.assertEquals(productsPage.getProductText(), "Products");
+    }
+
+    @Test()
+    public void loginCorrectDataTestWithSystemParameters() {
+        loginPage
+                .openPage()
+                .waitForPageOpened()
+                .login(System.getProperty("username", "123"), System.getProperty("password", "123"));
         Assert.assertEquals(productsPage.getProductText(), "Products");
     }
 
