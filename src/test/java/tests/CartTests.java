@@ -11,6 +11,11 @@ public class CartTests extends BaseTest {
     //2) удалить товар из корзины и проверить, что он удалился
     //3) добавть 2 товара в корзину и проверить, что количество добавленных товаров = 2
 
+    /**
+     * Products object [ ].
+     *
+     * @return the object [ ]
+     */
     @DataProvider(name = "products")
     public Object[] products () {
         return new Object[] {
@@ -23,6 +28,11 @@ public class CartTests extends BaseTest {
         };
     }
 
+    /**
+     * Products and price data object [ ] [ ].
+     *
+     * @return the object [ ] [ ]
+     */
     @DataProvider(name = "productsAndPriceData")
     public Object[][] productsAndPriceData() {
         return new Object[][] {
@@ -35,54 +45,64 @@ public class CartTests extends BaseTest {
         };
     }
 
+    /**
+     * Add product to cart test.
+     *
+     * @param productName the product name
+     * @param price       the price
+     */
     @Test(alwaysRun = true, dataProvider = "productsAndPriceData")
     public void addProductToCartTest(String productName, String price) {
-        loginPage
-                .openPage()
-                .waitForPageOpened()
-                .login(USERNAME, PASSWORD)
-                .addProductToCart(productName);
+        productSteps.loginAndAddProduct(USERNAME, PASSWORD, productName);
         cartPage.openPage();
         Assert.assertEquals(cartPage.getProductPrice(productName), price);
     }
 
+    /**
+     * Add product to cart test w ith error.
+     */
+    @Test()
+    public void addProductToCartTestWIthError() {
+        productSteps.loginAndAddProduct(USERNAME, PASSWORD, SAUCE_LABS_BACKPACK);
+        cartSteps.openCartPage();
+        Assert.assertEquals(cartPage.getProductPrice(SAUCE_LABS_BACKPACK), "16");
+    }
+
+    /**
+     * Remove one of products from cart test.
+     */
     @Test
     public void removeOneOfProductsFromCartTest() {
-        loginPage
-                .openPage()
-                .waitForPageOpened()
-                .login(USERNAME, PASSWORD)
+        loginSteps.loginAndWaitForPageOpened(USERNAME, PASSWORD);
+        productSteps
                 .addProductToCart(SAUCE_LABS_BACKPACK)
                 .addProductToCart(SAUCE_LABS_FLEECE_JACKET);
-        cartPage
-                .openPage()
-                .removeProductFromCart(SAUCE_LABS_BACKPACK);
+        cartSteps.openCartPageAndRemoveProduct(SAUCE_LABS_BACKPACK);
         Assert.assertEquals(cartPage.getProductsCount(), 1);
     }
 
+    /**
+     * Remove product from cart test.
+     *
+     * @param productName the product name
+     */
     @Test(dataProvider = "products", groups = "dataProvider")
     public void removeProductFromCartTest(String productName) {
-        loginPage
-                .openPage()
-                .waitForPageOpened()
-                .login(USERNAME, PASSWORD)
-                .addProductToCart(productName);
-        cartPage
-                .openPage()
-                .removeProductFromCart(productName);
+        productSteps.loginAndAddProduct(USERNAME, PASSWORD, productName);
+        cartSteps.openCartPageAndRemoveProduct(productName);
         Assert.assertFalse(cartPage.isProductDisplayed(productName));
     }
 
+    /**
+     * Add two products to cart and check count test.
+     */
     @Test
     public void addTwoProductsToCartAndCheckCountTest() {
-        loginPage
-                .openPage()
-                .waitForPageOpened()
-                .login(USERNAME, PASSWORD)
+        loginSteps.loginAndWaitForPageOpened(USERNAME, PASSWORD);
+        productSteps
                 .addProductToCart(SAUCE_LABS_BACKPACK)
                 .addProductToCart(SAUCE_LABS_FLEECE_JACKET);
-        cartPage
-                .openPage();
+        cartSteps.openCartPage();
         Assert.assertEquals(cartPage.getProductsCount(), 2);
     }
 }

@@ -11,6 +11,11 @@ public abstract class BasePage {
         PageFactory.initElements(driver, this);
     }
 
+    /**
+     * Open page.
+     *
+     * @param url the url
+     */
     public void openPage(String url) {
         driver.get(url);
     }

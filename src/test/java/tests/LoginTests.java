@@ -13,77 +13,82 @@ public class LoginTests extends BaseTest implements ITestConstants {
     private static final String EMPTY_PASSWORD_ERROR_TEXT = "Epic sadface: Password is required";
     private static final String INCORRECT_DATA_ERROR_TEXT = "Epic sadface: Username and password do not match any user in this service";
 
+    /**
+     * Login with empty fields test.
+     */
     @Test()
     public void loginWithEmptyFieldsTest() {
-        loginPage
-                .openPage()
-                .waitForPageOpened()
-                .login("", "");
+        loginSteps.loginAndWaitForPageOpened("", "");
         Assert.assertEquals(loginPage.getErrorMessageText(), EMPTY_USERNAME_ERROR_TEXT);
     }
 
+    /**
+     * Login with empty fields test with error.
+     */
     @Test(retryAnalyzer = Retry.class)
     public void loginWithEmptyFieldsTestWithError() {
-        loginPage
-                .openPage()
-                .waitForPageOpened()
-                .login("", "");
+        loginSteps.loginAndWaitForPageOpened("", "");
         Assert.assertEquals(loginPage.getErrorMessageText(), EMPTY_USERNAME_ERROR_TEXT_ERROR);
     }
 
+    /**
+     * Login with empty username test.
+     */
     @Test
     public void loginWithEmptyUsernameTest() {
-        loginPage
-                .openPage()
-                .waitForPageOpened()
-                .login("", PASSWORD);
+        loginSteps.loginAndWaitForPageOpened("", PASSWORD);
         Assert.assertEquals(loginPage.getErrorMessageText(), EMPTY_USERNAME_ERROR_TEXT);
     }
 
+    /**
+     * Login with empty password test.
+     */
     @Test
     public void loginWithEmptyPasswordTest() {
-        loginPage
-                .openPage()
-                .waitForPageOpened()
-                .login(USERNAME, "");
+        loginSteps.loginAndWaitForPageOpened(USERNAME, "");
         Assert.assertEquals(loginPage.getErrorMessageText(), EMPTY_PASSWORD_ERROR_TEXT);
     }
 
+    /**
+     * Login with incorrect data test.
+     */
     @Test
     public void loginWithIncorrectDataTest() {
-        loginPage
-                .openPage()
-                .waitForPageOpened()
-                .login("evnev", "evev");
+        loginSteps.loginAndWaitForPageOpened("evnev", "evev");
         Assert.assertEquals(loginPage.getErrorMessageText(), INCORRECT_DATA_ERROR_TEXT);
     }
 
+    /**
+     * Login with incorrect data test with parameters.
+     *
+     * @param username the username
+     * @param password the password
+     */
     @Test
     @Parameters({"username", "password"})
     public void loginWithIncorrectDataTestWithParameters(@Optional("optinalUsername") String username,
             @Optional("optinalPassword") String password) {
-        loginPage
-                .openPage()
-                .waitForPageOpened()
-                .login(username, password);
+        loginSteps.loginAndWaitForPageOpened(username, password);
         Assert.assertEquals(loginPage.getErrorMessageText(), INCORRECT_DATA_ERROR_TEXT);
     }
 
+    /**
+     * Login correct data test.
+     */
     @Test()
     public void loginCorrectDataTest() {
-        loginPage
-                .openPage()
-                .waitForPageOpened()
-                .login(USERNAME, PASSWORD);
+        loginSteps.loginAndWaitForPageOpened(USERNAME, PASSWORD);
         Assert.assertEquals(productsPage.getProductText(), "Products");
     }
 
+    /**
+     * Login correct data test with system parameters.
+     */
     @Test()
     public void loginCorrectDataTestWithSystemParameters() {
-        loginPage
-                .openPage()
-                .waitForPageOpened()
-                .login(System.getProperty("username", "123"), System.getProperty("password", "123"));
+        loginSteps.loginAndWaitForPageOpened(
+                System.getProperty("username", "123"),
+                System.getProperty("password", "123"));
         Assert.assertEquals(productsPage.getProductText(), "Products");
     }
 
