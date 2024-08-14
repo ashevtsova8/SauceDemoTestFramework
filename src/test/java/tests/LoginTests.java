@@ -5,6 +5,7 @@ import org.testng.Assert;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
+import utils.PropertyReader;
 
 public class LoginTests extends BaseTest implements ITestConstants {
     private static final String EMPTY_USERNAME_ERROR_TEXT = "Epic sadface: Username is required";
@@ -89,6 +90,17 @@ public class LoginTests extends BaseTest implements ITestConstants {
         loginSteps.loginAndWaitForPageOpened(
                 System.getProperty("username", "123"),
                 System.getProperty("password", "123"));
+        Assert.assertEquals(productsPage.getProductText(), "Products");
+    }
+
+    /**
+     * Login correct data test with config parameters.
+     */
+    @Test()
+    public void loginCorrectDataTestWithConfigParameters() {
+        loginSteps.loginAndWaitForPageOpened(
+                System.getProperty("username", PropertyReader.getProperty("username")),
+                System.getProperty("password", PropertyReader.getProperty("password")));
         Assert.assertEquals(productsPage.getProductText(), "Products");
     }
 
