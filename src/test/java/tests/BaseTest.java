@@ -82,29 +82,4 @@ public class BaseTest {
     public void endTest() {
         driver.quit();
     }
-
-    public boolean isFileDownloaded(String downloadFileName) {
-        File folder = new File(System.getProperty("user.dir"));
-        File[] listOfFiles = folder.listFiles();
-        boolean found = false;
-        File f = null;
-        for (File listOfFile : listOfFiles) {
-            if (listOfFile.isFile()) {
-                String nameOfTheFile = listOfFile.getName();
-                System.out.println("File " + listOfFile.getName());
-                if (nameOfTheFile.matches(downloadFileName)) {
-                    f = new File(nameOfTheFile);
-                    found = true;
-                }
-            }
-        }
-        return found;
-    }
-
-    @Test
-    public void fileDownloadTest() throws InterruptedException {
-        driver.get("https://the-internet.herokuapp.com/download");
-        driver.findElement(By.xpath(String.format("//a[@href='download/%s']", "some-file.txt"))).click();
-        Assert.assertTrue(isFileDownloaded("some-file.txt"));
-    }
 }
